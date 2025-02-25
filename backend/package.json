@@ -1,0 +1,29 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "zkpass"
+  ],
+  "author": "Sanjay UG",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "circomlib": "^2.0.5",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "ethers": "^6.13.5",
+    "express": "^4.21.2",
+    "mongoose": "^8.10.1",
+    "snarkjs": "^0.7.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
