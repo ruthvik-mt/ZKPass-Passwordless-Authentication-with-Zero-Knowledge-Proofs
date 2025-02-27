@@ -1,3 +1,5 @@
+pragma circom 2.0.0; // Specify the Circom version
+
 include "../node_modules/circomlib/circuits/poseidon.circom";
 
 template Auth() {
