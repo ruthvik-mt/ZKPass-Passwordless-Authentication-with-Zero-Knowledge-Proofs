@@ -4,9 +4,10 @@ async function main() {
     const AuthContract = await hre.ethers.getContractFactory("AuthContract");
     const authContract = await AuthContract.deploy();
 
-    await authContract.deployed();
+    // Fix: Use `waitForDeployment()` instead of `.deployed()`
+    await authContract.waitForDeployment();
 
-    console.log("AuthContract deployed to:", authContract.address);
+    console.log("AuthContract deployed to:", authContract.target);
 }
 
 main().catch((error) => {
