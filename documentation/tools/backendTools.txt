@@ -1,0 +1,46 @@
+
+------------------------------------
+🔧 BACKEND - (Node.js + TypeScript)
+------------------------------------
+
+1. express (v5.1.0)
+   - What: Web framework for building REST APIs.
+   - Why: Used to handle API routes and server logic.
+
+2. cors (v2.8.5)
+   - What: Middleware for handling cross-origin requests.
+   - Why: Required to enable frontend-backend communication.
+
+3. dotenv (v16.5.0)
+   - What: Loads environment variables from .env.
+   - Why: For secure configuration management.
+
+4. ethers (v6.13.5)
+   - What: Ethereum JavaScript library.
+   - Why: Used to interact with blockchain smart contracts.
+
+5. snarkjs (v0.7.5)
+   - What: Toolkit for zk-SNARK proof generation and verification.
+   - Why: Core library for Zero-Knowledge Proof integration.
+
+6. nodemon (v3.1.9)
+   - What: Dev tool that restarts server on file changes.
+   - Why: Speeds up development and testing.
+
+-- Dev Dependencies --
+
+7. typescript (v5.8.3)
+   - What: Adds static typing to JavaScript.
+   - Why: Ensures better scalability and maintainability.
+
+8. ts-node (v10.9.2)
+   - What: Run TypeScript files directly.
+   - Why: Useful for local development without compiling.
+
+9. @types/node (v22.14.1)
+   - What: Type definitions for Node.js.
+   - Why: Provides type safety for Node features.
+
+10. @types/express (v5.0.1)
+    - What: Type definitions for Express.
+    - Why: Required for TypeScript + Express integration.

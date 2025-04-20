@@ -1,34 +1,31 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "zkpass"
-  ],
-  "author": "Sanjay UG",
-  "license": "ISC",
   "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/index.ts",
+    "dev": "nodemon --exec ts-node src/index.ts",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^3.0.2",
-    "circomlib": "^2.0.5",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.5.0",
     "ethers": "^6.13.5",
-    "express": "^4.21.2",
-    "joi": "^17.13.3",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.10.2",
+    "express": "^5.1.0",
+    "nodemon": "^3.1.9",
     "snarkjs": "^0.7.5"
   },
   "devDependencies": {
-    "eslint": "^9.21.0",
-    "nodemon": "^3.1.9",
-    "prettier": "^3.5.2"
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.14.1",
+    "@types/snarkjs": "^0.7.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   }
 }

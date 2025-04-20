@@ -1,0 +1,148 @@
+/* Auth Components Styling */
+
+.auth-container {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+label {
+  font-weight: 600;
+  color: #333;
+}
+
+input {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  border-color: #4a90e2;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.auth-button {
+  padding: 0.75rem;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.auth-button:hover {
+  background-color: #3a7bc8;
+}
+
+.auth-button:disabled {
+  background-color: #a0c0e8;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 0.875rem;
+  margin-top: -0.5rem;
+}
+
+.forgot-link {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.text-button {
+  background: none;
+  border: none;
+  color: #4a90e2;
+  font-size: 0.875rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.text-button:hover {
+  color: #3a7bc8;
+}
+
+.cancel-button {
+  padding: 0.75rem;
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.cancel-button:hover {
+  background-color: #e5e5e5;
+}
+
+.recovery-phrase-box {
+  background-color: #f5f5f5;
+  border: 1px dashed #ddd;
+  border-radius: 4px;
+  padding: 1rem;
+  margin: 1rem 0;
+  text-align: center;
+  font-family: monospace;
+  font-size: 1.1rem;
+  word-break: break-all;
+}
+
+.recovery-instructions {
+  margin: 1rem 0;
+  font-size: 0.875rem;
+  color: #555;
+}
+
+.copy-button {
+  padding: 0.5rem 1rem;
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: background-color 0.3s;
+}
+
+.copy-button:hover {
+  background-color: #e5e5e5;
+}
+
+.confirmation-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.confirmation-checkbox input {
+  margin: 0;
+  padding: 0;
+  width: auto;
+}

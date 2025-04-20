@@ -1,0 +1,102 @@
+For Registering:
+
+USER (Client)
+   |
+   v
++-------------------------------------+
+| Enter user's unique identity (UID)  |
++-------------------------------------+
+         |
+         v
++------------------------------------------+
+| Generate and show Recovery Phrase        |
+| → Deterministic link to UID (SHA-256)    |
+| → Ask user to save it securely           |
++------------------------------------------+
+         |
+         v
++------------------------------+
+| Store UID on Blockchain      |
++------------------------------+
+         |
+         v
+[ Registration Successful ]
+
+
+
+------------------------------------------
+
+
+For Login:
+
+USER (Client)
+   |
+   v
++----------------------------------------------------+
+| Enter UID or Click "Forgot UID?"                   |
++----------------------------------------------------+
+        |                               |
+        |                               v
+        |                    +----------------------------+
+        |                    | Enter Recovery Phrase       |
+        |                    +----------------------------+
+        |                               |
+        |                               v
+        |                    +----------------------------+
+        |                    | Derive UID from phrase     |
+        |                    | → uid = SHA-256(phrase)    |
+        |                    +----------------------------+
+        |                               |
+        |                               v
+        |                        (Use derived UID for login flow)↓
+        |_______________________________|
+
+                     |
+                     v
+        +--------------------------------------+
+        | Check if UID exists on Blockchain    |
+        +--------------------------------------+
+                   | Yes             	     | No
+                   v                  	     v
+    +---------------------------------+     +--------------------------+
+    | Derive priKey from UID locally  |     | Show "User Not Found"    |
+    | → Reverse UID                   |     | Redirect to Register Page|
+    | → Take odd indices              |     +--------------------------+
+    | → Append secret salt            |
+    | → SHA-256 the result            |
+    | → Result = privateKey           |
+    +---------------------------------+
+                   |
+                   v
+    +------------------------------------------+
+    | Generate ZKP Proof using derived priKey  |
+    | → zk-SNARK proof generation              |
+    +------------------------------------------+
+                   |
+                   v
+    +-------------------------------------------------+
+    | Send ZKP Proof + UID to Backend for verification|
+    +-------------------------------------------------+
+                   |
+                   v
+    +--------------------------------------------------+
+    | Backend fetches UID's public data from Blockchain|
+    +--------------------------------------------------+
+                   |
+                   v
+    +---------------------------------------------+
+    | Verify ZKP Proof using public key           |
+    +---------------------------------------------+
+             | Proof Valid                  | Proof inValid
+             v                              v
+    +----------------------------+    +-----------------------------+
+    | Login Success              |    | Unauthorized Access         |
+    | Redirect to Dashboard      |    | Show "Invalid Credentials"  |
+    +----------------------------+    +-----------------------------+
+		         |
+                 v
+    +------------------------------------------------+
+    |✅ Show user their UID (if login via recovery)  |
+    | → "Your UID is: abc123. Please save it."       |
+    | → Option to copy or download securely          |
+    +------------------------------------------------+
