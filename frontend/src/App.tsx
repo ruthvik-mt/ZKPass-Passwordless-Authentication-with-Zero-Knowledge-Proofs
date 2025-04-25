@@ -50,10 +50,12 @@ function App() {
 
   return (
     <div className="app-container">
-      <header className="app-header">
-        <h1>ZKPass</h1>
-        <p>Secure Authentication with Zero-Knowledge Proofs</p>
-      </header>
+      {currentView !== AuthView.DASHBOARD && (
+        <header className="app-header">
+          <h1>ZKPass</h1>
+          <p>Secure Authentication with Zero-Knowledge Proofs</p>
+        </header>
+      )}
 
       <main className="app-content">
         {currentView === AuthView.LOGIN && (

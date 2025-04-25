@@ -66,7 +66,7 @@ const Recovery = ({ onRecoverySuccess, onCancel }: RecoveryProps) => {
         {error && <div className="error-message">{error}</div>}
         
         <button type="submit" className="auth-button" disabled={loading}>
-          {loading ? 'Recovering...' : 'Recover UID'}
+          {loading ? 'Recovering...' : 'Recover UID and Login'}
         </button>
         
         <button type="button" onClick={onCancel} className="cancel-button">

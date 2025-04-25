@@ -9,7 +9,7 @@ const Dashboard = ({ uid, onLogout }: DashboardProps) => {
   return (
     <div className="dashboard-container">
       <header className="dashboard-header">
-        <h1>ZKPass Dashboard</h1>
+        <h1>Dashboard</h1>
         <button onClick={onLogout} className="logout-button">
           Logout
         </button>

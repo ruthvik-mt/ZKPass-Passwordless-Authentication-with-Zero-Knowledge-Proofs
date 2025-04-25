@@ -3,9 +3,16 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
+  color-scheme: dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #000000;
+
+  --primary-color: #FFD700; /* Bright Gold */
+  --primary-hover: #FFCC00;
+  --background-color: #000000; /* Pitch Black */
+  --card-background: #111111;
+  --text-color: rgba(255, 255, 255, 0.87);
+  --border-color: #333333;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -15,11 +22,11 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--primary-color);
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: var(--primary-hover);
 }
 
 body {
@@ -28,6 +35,8 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 h1 {
@@ -42,27 +51,31 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--primary-color);
+  color: white;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: background-color 0.25s, border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  background-color: var(--primary-hover);
+  border-color: var(--primary-color);
 }
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 4px auto var(--primary-color);
 }
 
+/* Dark theme is now the only theme */
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    color: var(--text-color);
+    background-color: var(--background-color);
   }
   a:hover {
-    color: #747bff;
+    color: var(--primary-hover);
   }
   button {
-    background-color: #f9f9f9;
+    background-color: var(--primary-color);
+    color: white;
   }
 }

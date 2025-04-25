@@ -11,14 +11,18 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f9fafb;
+  background-color: var(--background-color);
+}
+
+.app-container:has(.dashboard-container) {
+  background-color: white;
 }
 
 .app-header {
   text-align: center;
   padding: 2rem 1rem;
-  background-color: #4a90e2;
-  color: white;
+  background-color: var(--primary-color);
+  color: #0f00e1;
 }
 
 .app-header h1 {
@@ -41,19 +45,20 @@
 .app-footer {
   text-align: center;
   padding: 1.5rem;
-  background-color: #f5f5f5;
-  border-top: 1px solid #eee;
+  background-color: #111111;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-color);
 }
 
 .text-button {
   background: none;
   border: none;
-  color: #4a90e2;
+  color: var(--primary-color);
   font-size: 1rem;
   cursor: pointer;
   text-decoration: underline;
 }
 
 .text-button:hover {
-  color: #3a7bc8;
+  color: var(--primary-hover);
 }

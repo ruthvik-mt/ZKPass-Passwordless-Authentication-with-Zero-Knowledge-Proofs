@@ -77,7 +77,7 @@ const Login = ({ onLoginSuccess, onForgotUID }: LoginProps) => {
         </button>
         
         <div className="forgot-link">
-          <button type="button" onClick={onForgotUID} className="text-button">
+          <button type="button" onClick={onForgotUID} className="text-button" >
             Forgot UID?
           </button>
         </div>
