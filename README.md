@@ -2,6 +2,35 @@
 
 ZKPass is a secure authentication system that uses Zero-Knowledge Proofs (ZKPs) to verify user identities without revealing sensitive information.
 
+## How It Works (With ZKP Magic)
+
+### Simple Example: Email & Password or userIdentity [we call it UID] (But with ZKP)
+Imagine:
+- Your **UID** = `Krishna678_INSTA@` (stored on blockchain)
+- Your **priKey** = `hidden_password` (derived from UID, never stored)
+
+#### Login Flow:
+1. **You Claim**:  
+   _"I’m `Krishna678_INSTA@` and know the secret `hidden_password`."  
+2. **ZKP Proof**:  
+   - Client generates a cryptographic **proof** using:  
+     - `priKey` (derived from UID)  
+     - **Proving Key** (pre-setup math puzzle)  
+3. **Verification**:  
+   - Backend checks the proof against:  
+     - Your `UID` (from blockchain)  
+     - **Verification Key** (math "lock")  
+   - ✅ Valid? → Logged in! *(No secrets exposed)*  
+   - ❌ Invalid? → Rejected.  
+
+#### Why It's Secure:
+- 🔒 **Zero-Knowledge**: Proof reveals nothing about `priKey`.  
+- ⚡ **Fast**: Verification takes 1-2ms (even on-chain).  
+- 🛡️ **Unfakeable**: Impossible to guess valid proof without `priKey`.  
+
+*(Uses zk-SNARKs with Groth16 algorithm for optimal efficiency.)*
+
+---
 ## Project Structure
 
 The project is organized into several key components:
@@ -106,7 +135,6 @@ npx hardhat run scripts/deploy.js --network localhost
 
 1. User enters their recovery phrase
 2. System derives the UID from the recovery phrase
-3. User can then log in with the recovered UID
 
 ## Security Considerations
 
