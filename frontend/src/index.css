@@ -1,0 +1,81 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #000000;
+
+  --primary-color: #FFD700; /* Bright Gold */
+  --primary-hover: #FFCC00;
+  --background-color: #000000; /* Pitch Black */
+  --card-background: #111111;
+  --text-color: rgba(255, 255, 255, 0.87);
+  --border-color: #333333;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: var(--primary-color);
+  text-decoration: inherit;
+}
+a:hover {
+  color: var(--primary-hover);
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.25s, border-color 0.25s;
+}
+button:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-color);
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto var(--primary-color);
+}
+
+/* Dark theme is now the only theme */
+@media (prefers-color-scheme: light) {
+  :root {
+    color: var(--text-color);
+    background-color: var(--background-color);
+  }
+  a:hover {
+    color: var(--primary-hover);
+  }
+  button {
+    background-color: var(--primary-color);
+    color: white;
+  }
+}

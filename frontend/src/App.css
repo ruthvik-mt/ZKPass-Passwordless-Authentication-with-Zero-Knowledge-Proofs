@@ -1,0 +1,64 @@
+/* Main App Styling */
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0;
+  width: 100%;
+}
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-color);
+}
+
+.app-container:has(.dashboard-container) {
+  background-color: white;
+}
+
+.app-header {
+  text-align: center;
+  padding: 2rem 1rem;
+  background-color: var(--primary-color);
+  color: #0f00e1;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.app-header p {
+  margin: 0.5rem 0 0;
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.app-content {
+  flex: 1;
+  padding: 1rem;
+}
+
+.app-footer {
+  text-align: center;
+  padding: 1.5rem;
+  background-color: #111111;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+.text-button {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.text-button:hover {
+  color: var(--primary-hover);
+}

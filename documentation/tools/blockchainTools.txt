@@ -1,0 +1,12 @@
+
+------------------------------------
+🛠 BLOCKCHAIN - (Solidity + Hardhat)
+------------------------------------
+
+1. hardhat (v2.23.0)
+   - What: Ethereum development environment.
+   - Why: Used to write, test, and deploy smart contracts.
+
+2. @nomicfoundation/hardhat-toolbox (v5.0.0)
+   - What: Plugin bundle with Ethers.js, Waffle, and Chai.
+   - Why: Simplifies smart contract testing and deployment.

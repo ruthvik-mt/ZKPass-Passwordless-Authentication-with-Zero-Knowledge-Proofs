@@ -1,0 +1,58 @@
+
+-------------------------------------
+🌐 FRONTEND - (React + Vite + TS)
+-------------------------------------
+
+1. react (v19.0.0)
+   - What: UI library for building dynamic web apps.
+   - Why: Used to create the user interface.
+
+2. react-dom (v19.0.0)
+   - What: DOM renderer for React.
+   - Why: Required to render React components in the browser.
+
+-- Dev Dependencies --
+
+3. vite (v6.3.1)
+   - What: Modern frontend build tool.
+   - Why: Extremely fast for local dev and production builds.
+
+4. @vitejs/plugin-react (v4.3.4)
+   - What: React plugin for Vite.
+   - Why: Adds JSX and fast refresh support.
+
+5. typescript (v5.7.2)
+   - What: Adds type checking to JavaScript.
+   - Why: Enhances code reliability and dev experience.
+
+6. @types/react (v19.0.10)
+   - What: Type definitions for React.
+   - Why: Enables TypeScript support for React components.
+
+7. @types/react-dom (v19.0.4)
+   - What: Type definitions for ReactDOM.
+   - Why: Enables type safety for DOM rendering.
+
+8. eslint (v9.22.0)
+   - What: Linter for JavaScript/TypeScript.
+   - Why: Helps catch bugs and enforce coding standards.
+
+9. @eslint/js (v9.22.0)
+   - What: ESLint config for JavaScript projects.
+   - Why: Sets up base linting rules.
+
+10. eslint-plugin-react-hooks (v5.2.0)
+    - What: ESLint rules for React Hooks.
+    - Why: Ensures safe use of React Hooks.
+
+11. eslint-plugin-react-refresh (v0.4.19)
+    - What: Enables linting for React Fast Refresh.
+    - Why: Prevents issues during HMR in dev.
+
+12. globals (v16.0.0)
+    - What: Provides global variables to ESLint.
+    - Why: Helps ESLint recognize environment variables.
+
+13. typescript-eslint (v8.26.1)
+    - What: ESLint plugin for TypeScript.
+    - Why: Adds TypeScript support to ESLint.
