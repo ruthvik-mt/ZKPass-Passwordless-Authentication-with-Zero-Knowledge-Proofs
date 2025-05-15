@@ -28,11 +28,11 @@ export const register: RequestHandler = async (req, res) => {
       return;
     }
 
-    // Generate private key
-    const privateKey = crypto.randomBytes(32).toString('hex');
+    // Generate revoveryKey
+    const revoveryKey = crypto.randomBytes(32).toString('hex');
     
     // Generate recovery phrase (using the new method)
-    const recoveryPhrase = generateRecoveryPhrase(uid, privateKey);
+    const recoveryPhrase = generateRecoveryPhrase(uid, revoveryKey);
 
     // Store UID on blockchain
     await storeUIDOnBlockchain(uid);
@@ -148,15 +148,15 @@ function derivePrivateKey(pubKey: string): string {
 /**
  * Generate a recovery phrase from UID and private key
  */
-const generateRecoveryPhrase = (uid: string, privateKey: string): string => {
-  // Take 3 random characters from the privateKey
-  const priKeyChars = privateKey.substring(0, 3);
+const generateRecoveryPhrase = (uid: string, revoveryKey: string): string => {
+  // Take 3 random characters from the revoveryKey
+  const recvKeyChar = revoveryKey.substring(0, 3);
   
   // Take 3 random characters from the salt
   const saltChars = SECRET_SALT.substring(0, 3);
   
-  // Combine: priKeyChars + uid + saltChars
-  const combinedString = priKeyChars + uid + saltChars;
+  // Combine: recvKeyChar + uid + saltChars
+  const combinedString = recvKeyChar + uid + saltChars;
   
   // Generate phrase from combined string using word map
   let phraseParts: string[] = [];
