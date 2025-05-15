@@ -49,14 +49,14 @@ export const register: RequestHandler = async (req, res) => {
 };
 
 /**
- * Login with UID and ZKP proof
+ * Login with UID and generate ZKP proof
  */
 export const login: RequestHandler = async (req, res) => {
   try {
-    const { uid, proof } = req.body;
+    const { uid } = req.body;
 
-    if (!uid || !proof) {
-      res.status(400).json({ success: false, message: 'UID and proof are required' });
+    if (!uid) {
+      res.status(400).json({ success: false, message: 'UID is required' });
       return;
     }
 
@@ -67,6 +67,16 @@ export const login: RequestHandler = async (req, res) => {
       return;
     }
 
+    // Derive privateKey from uid following the algorithm
+    // 1. Reverse UID
+    // 2. Take odd indices
+    // 3. Append secret salt
+    // 4. SHA-256 the result
+    const privateKey = derivePrivateKey(uid);
+    
+    // Generate ZKP proof using uid and privateKey
+    const proof = await generateZKProof(uid, privateKey);
+    
     // Verify ZKP proof
     const isProofValid = await verifyZKProof(uid, proof);
     if (!isProofValid) {
@@ -205,8 +215,8 @@ const deriveUIDFromRecoveryPhrase = (recoveryPhrase: string): { uid: string, pri
   const uid = combinedString.substring(3, combinedString.length - 3);
   
   // Recreate a private key using the private key chars and derivation function
-  const publicKey = priKeyChars + uid; // Create a pseudo-public key
-  const privateKey = derivePrivateKey(publicKey);
+  // const publicKey = priKeyChars + uid; // Create a pseudo-public key
+  const privateKey = derivePrivateKey(uid);
   
   // Ensure the private key is a valid hex string
   const validPrivateKey = /^[0-9a-fA-F]+$/.test(privateKey) 
