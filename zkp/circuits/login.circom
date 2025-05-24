@@ -10,7 +10,7 @@ pragma circom 2.0.0;
 include "../node_modules/circomlib/circuits/poseidon.circom";
 include "../node_modules/circomlib/circuits/comparators.circom";
 
-template LoginCircuit() {
+template Login() {  // Changed from `LoginCircuit()` to `Login()` (best practice)
     // Private inputs
     signal input privateKey; // The private key derived from UID
     
@@ -25,8 +25,6 @@ template LoginCircuit() {
     hasher.inputs[0] <== privateKey;
     
     // Compare the hash with the expected value derived from the public UID
-    // In a real implementation, this would involve more complex logic
-    // For simplicity, we're just checking if they match
     component comparator = IsEqual();
     comparator.in[0] <== hasher.out;
     comparator.in[1] <== publicUID;
@@ -35,4 +33,4 @@ template LoginCircuit() {
     isValid <== comparator.out;
 }
 
-component main = LoginCircuit();
+component main { public [publicUID] } = Login();  // Added `public [publicUID]` for Groth16

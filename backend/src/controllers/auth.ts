@@ -134,11 +134,11 @@ export const verifyRecoveryPhrase: RequestHandler = async (req, res) => {
 };
 
 /**
- * Derive a private key from the public key
+ * Derive a private key from the UID
  */
-function derivePrivateKey(pubKey: string): string {
-  // Step 1: Reverse the public key
-  const reversed = pubKey.split('').reverse().join('');
+function derivePrivateKey(uid: string): string {
+  // Step 1: Reverse the UID
+  const reversed = uid.split('').reverse().join('');
 
   // Step 2: Take characters at odd indices
   const oddChars = reversed
@@ -147,10 +147,12 @@ function derivePrivateKey(pubKey: string): string {
     .join('');
 
   // Step 3: Concatenate with a static salt (known only to you)
-  const derivedPrivateKey = oddChars + SECRET_SALT;
+  const withSalt = oddChars + SECRET_SALT;
 
-  // Return the derived string directly (no hashing)
-  return derivedPrivateKey;
+  // Step 4: SHA-256 the result
+  const privateKey = crypto.createHash('sha256').update(withSalt).digest('hex');
+  
+  return privateKey;
 }
 
 
