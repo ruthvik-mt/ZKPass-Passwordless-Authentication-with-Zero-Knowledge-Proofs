@@ -3,7 +3,6 @@ import crypto from 'crypto';
 import { ethers } from 'ethers';
 import * as snarkjs from 'snarkjs';
 import { storeUIDOnBlockchain, checkUIDExists } from '../services/blockchain';
-import { generateZKProof, verifyZKProof } from '../services/zkp';
 import { WORD_MAP } from '../utils/wordMap';
 
 // Secret salt for key derivation (should be in .env)
@@ -75,10 +74,12 @@ export const login: RequestHandler = async (req, res) => {
     const privateKey = derivePrivateKey(uid);
     
     // Generate ZKP proof using uid and privateKey
-    const proof = await generateZKProof(uid, privateKey);
+    const { generateProof } = await import('../../zkp/proofGenerator');
+    const proof = await generateProof(uid, privateKey);
     
     // Verify ZKP proof
-    const isProofValid = await verifyZKProof(uid, proof);
+    const { verifyProof } = await import('../../zkp/proofVerifier');
+    const isProofValid = await verifyProof(proof, uid);
     if (!isProofValid) {
       res.status(401).json({ success: false, message: 'Invalid credentials' });
       return;

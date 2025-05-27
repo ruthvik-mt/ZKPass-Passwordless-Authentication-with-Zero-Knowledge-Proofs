@@ -1,5 +1,3 @@
-import { ZKProof } from '../types/auth';
-
 const API_BASE_URL = 'http://localhost:3001/api';
 
 export const authApi = {
@@ -25,15 +23,15 @@ export const authApi = {
   },
   
   /**
-   * Login with UID and ZKP proof
+   * Login with UID - proof generation handled by backend
    */
-  login: async (uid: string, proof: ZKProof): Promise<{ success: boolean; uid: string }> => {
+  login: async (uid: string): Promise<{ success: boolean; uid: string }> => {
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ uid, proof }),
+      body: JSON.stringify({ uid }),
     });
     
     const data = await response.json();

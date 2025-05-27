@@ -1,23 +1,18 @@
-// Deployment script for ZKPassRegistry contract
+// Deployment script for ZKPass contract
 import { ethers } from "hardhat";
 
 async function main() {
-  console.log("Deploying ZKPassRegistry contract...");
+  // Deploy ZKPass contract
+  console.log("Deploying ZKPass contract...");
+  const ZKPass = await ethers.getContractFactory("ZKPass");
+  const zkPass = await ZKPass.deploy();
+  await zkPass.waitForDeployment();
+  const contractAddress = await zkPass.getAddress();
+  console.log(`ZKPass deployed to: ${contractAddress}`);
 
-  // Get the contract factory
-  const ZKPassRegistry = await ethers.getContractFactory("ZKPassRegistry");
-  
-  // Deploy the contract
-  const zkPassRegistry = await ZKPassRegistry.deploy();
-  
-  // Wait for deployment to complete
-  await zkPassRegistry.waitForDeployment();
-  
-  // Get the contract address
-  const address = await zkPassRegistry.getAddress();
-  
-  console.log(`ZKPassRegistry deployed to: ${address}`);
-  console.log("Add this address to your .env file as CONTRACT_ADDRESS");
+  // Log the contract address for .env file
+  console.log("\nAdd this address to your .env file:");
+  console.log(`CONTRACT_ADDRESS=${contractAddress}  // ZKPass contract address`);
 }
 
 // Execute the deployment

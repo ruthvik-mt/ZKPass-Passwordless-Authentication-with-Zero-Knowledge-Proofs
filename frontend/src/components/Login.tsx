@@ -23,20 +23,13 @@ const Login = ({ onLoginSuccess, onForgotUID }: LoginProps) => {
     try {
       setLoading(true);
       
-      // In a real implementation, we would generate a ZKP proof here
-      // For now, we'll simulate it
-      const simulatedProof = {
-        // This would be a real ZKP proof in production
-        proof: { type: 'simulated', value: 'proof-value' }
-      };
-      
-      // Call backend API to login
+      // Call backend API to login - proof generation handled by backend
       const response = await fetch('http://localhost:3001/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ uid, proof: simulatedProof }),
+        body: JSON.stringify({ uid })
       });
       
       const data = await response.json();
