@@ -1,78 +1,75 @@
 import axios, { AxiosInstance } from 'axios';
+import { ethers } from 'ethers';
 
 export interface ZKPassConfig {
-  apiKey: string;
-  baseUrl?: string;
+  baseURL: string;
+  apiKey?: string;
 }
 
 export interface RegisterResponse {
   success: boolean;
+  message: string;
   recoveryPhrase: string;
 }
 
 export interface LoginResponse {
   success: boolean;
+  message: string;
   uid: string;
 }
 
 export interface VerifyRecoveryResponse {
   success: boolean;
+  message: string;
   uid: string;
+  publicKey: string;
 }
 
-export class ZKPassSDK {
+export class ZKPassClient {
   private client: AxiosInstance;
-  private static DEFAULT_BASE_URL = 'http://localhost:3001/api';
 
   constructor(config: ZKPassConfig) {
     this.client = axios.create({
-      baseURL: config.baseUrl || ZKPassSDK.DEFAULT_BASE_URL,
+      baseURL: config.baseURL,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${config.apiKey}`
+        ...(config.apiKey && { 'X-API-Key': config.apiKey })
       }
     });
   }
 
   /**
    * Register a new user with UID
-   * @param uid - User identifier
+   * @param uid The unique identifier for the user
    * @returns Promise with registration response including recovery phrase
    */
   async register(uid: string): Promise<RegisterResponse> {
-    try {
-      const { data } = await this.client.post('/auth/register', { uid });
-      return data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Registration failed');
-    }
+    const response = await this.client.post<RegisterResponse>('/auth/register', { uid });
+    return response.data;
   }
 
   /**
    * Login with UID
-   * @param uid - User identifier
+   * @param uid The unique identifier for the user
    * @returns Promise with login response
    */
   async login(uid: string): Promise<LoginResponse> {
-    try {
-      const { data } = await this.client.post('/auth/login', { uid });
-      return data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Login failed');
-    }
+    const response = await this.client.post<LoginResponse>('/auth/login', { uid });
+    return response.data;
   }
 
   /**
    * Verify recovery phrase and derive UID
-   * @param recoveryPhrase - Recovery phrase to verify
-   * @returns Promise with verification response including derived UID
+   * @param recoveryPhrase The recovery phrase to verify
+   * @returns Promise with verification response including UID and public key
    */
   async verifyRecovery(recoveryPhrase: string): Promise<VerifyRecoveryResponse> {
-    try {
-      const { data } = await this.client.post('/auth/verify-recovery', { recoveryPhrase });
-      return data;
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Recovery verification failed');
-    }
+    const response = await this.client.post<VerifyRecoveryResponse>('/auth/verify-recovery', { recoveryPhrase });
+    return response.data;
   }
+}
+
+// Export a factory function for easier instantiation
+export function createZKPassClient(config: ZKPassConfig): ZKPassClient {
+  return new ZKPassClient(config);
 }
