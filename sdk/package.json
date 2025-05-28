@@ -1,17 +1,26 @@
 {
   "name": "zkpass-sdk",
-  "version": "1.0.0",
-  "description": "SDK for ZKPass authentication system",
+  "version": "1.1.0",
+  "description": "SDK for ZKPass authentication system - A secure authentication service for web applications",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
-    "test": "ts-node src/test.ts"
+    "test": "ts-node src/test.ts",
+    "prepublishOnly": "npm run build"
   },
-  "keywords": ["zkpass", "authentication", "zkp", "sdk"],
-  "author": "",
+  "keywords": ["zkpass", "authentication", "zkp", "sdk", "security", "login", "register"],
+  "author": "ZKPass Team",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/zkpass-sdk"
+  },
   "dependencies": {
     "axios": "^1.6.7",
     "ethers": "^6.11.1"
@@ -20,5 +29,8 @@
     "@types/node": "^20.11.19",
     "typescript": "^5.3.3",
     "ts-node": "^10.9.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }

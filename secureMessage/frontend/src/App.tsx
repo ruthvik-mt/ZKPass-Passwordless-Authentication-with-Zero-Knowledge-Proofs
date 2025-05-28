@@ -1,25 +1,40 @@
 import React, { useState } from 'react'
 import { ChakraProvider } from '@chakra-ui/react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import Login from './components/Login'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
+import { Login } from './components/Login'
 import Register from './components/Register'
 import ForgotUID from './components/ForgotUID'
 import MessageEncoder from './components/MessageEncoder'
 
-function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+// Protected Route component
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated } = useAuth()
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" />
+}
 
+// Main App component
+const AppContent: React.FC = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-uid" element={<ForgotUID />} />
+        <Route path="/encoder" element={<MessageEncoder />} />
+        <Route path="/" element={<ProtectedRoute><div>Protected Content</div></ProtectedRoute>} />
+      </Routes>
+    </Router>
+  )
+}
+
+// Root App component with providers
+const App: React.FC = () => {
   return (
     <ChakraProvider>
-      <Router>
-        <Routes>
-          <Route path="/login" element={!isAuthenticated ? <Login setIsAuthenticated={setIsAuthenticated} /> : <Navigate to="/encoder" />} />
-          <Route path="/register" element={!isAuthenticated ? <Register setIsAuthenticated={setIsAuthenticated} /> : <Navigate to="/encoder" />} />
-          <Route path="/forgot-uid" element={!isAuthenticated ? <ForgotUID setIsAuthenticated={setIsAuthenticated} /> : <Navigate to="/encoder" />} />
-          <Route path="/encoder" element={isAuthenticated ? <MessageEncoder setIsAuthenticated={setIsAuthenticated} /> : <Navigate to="/login" />} />
-          <Route path="/" element={<Navigate to="/login" />} />
-        </Routes>
-      </Router>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </ChakraProvider>
   )
 }

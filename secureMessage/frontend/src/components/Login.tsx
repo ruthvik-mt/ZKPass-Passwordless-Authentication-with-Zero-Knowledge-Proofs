@@ -10,71 +10,101 @@ import {
   Heading,
   Text,
   useToast,
+  Container,
 } from '@chakra-ui/react'
-import axios from 'axios'
+import { useAuth } from '../contexts/AuthContext'
 
-interface LoginProps {
-  setIsAuthenticated: (value: boolean) => void
-}
-
-const Login = ({ setIsAuthenticated }: LoginProps) => {
+export const Login: React.FC = () => {
   const [uid, setUid] = useState('')
-  const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(false)
+  const { login, register, error } = useAuth()
   const toast = useToast()
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsLoading(true)
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/login', { uid })
-      if (response.data.success) {
-        setIsAuthenticated(true)
-        navigate('/encoder')
-      }
-    } catch (error) {
+      await login(uid)
       toast({
-        title: 'Error',
-        description: 'Invalid UID',
-        status: 'error',
+        title: 'Login successful',
+        status: 'success',
         duration: 3000,
         isClosable: true,
       })
+    } catch (err) {
+      toast({
+        title: 'Login failed',
+        description: error || 'An error occurred',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleRegister = async () => {
+    setIsLoading(true)
+    try {
+      const recoveryPhrase = await register(uid)
+      toast({
+        title: 'Registration successful',
+        description: `Please save your recovery phrase: ${recoveryPhrase}`,
+        status: 'success',
+        duration: 10000,
+        isClosable: true,
+      })
+    } catch (err) {
+      toast({
+        title: 'Registration failed',
+        description: error || 'An error occurred',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      })
+    } finally {
+      setIsLoading(false)
     }
   }
 
   return (
-    <Box maxW="md" mx="auto" mt={8} p={6} borderWidth={1} borderRadius="lg">
-      <VStack spacing={4}>
-        <Heading>Login</Heading>
-        <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-          <VStack spacing={4}>
-            <FormControl isRequired>
-              <FormLabel>UID</FormLabel>
-              <Input
-                type="text"
-                value={uid}
-                onChange={(e) => setUid(e.target.value)}
-                placeholder="Enter your UID"
-              />
-            </FormControl>
-            <Button type="submit" colorScheme="blue" width="100%">
-              Login
-            </Button>
-          </VStack>
-        </form>
-        <Text>
-          Don't have an account?{' '}
-          <Link to="/register" style={{ color: 'blue' }}>
-            Register
-          </Link>
-        </Text>
-        <Text>
-          <Link to="/forgot-uid" style={{ color: 'blue' }}>
-            Forgot UID?
-          </Link>
-        </Text>
+    <Container maxW="container.sm" py={10}>
+      <VStack spacing={8}>
+        <Heading>Welcome to Secure Message</Heading>
+        <Box w="100%" p={8} borderWidth={1} borderRadius="lg">
+          <form onSubmit={handleLogin}>
+            <VStack spacing={4}>
+              <FormControl isRequired>
+                <FormLabel>User ID</FormLabel>
+                <Input
+                  type="text"
+                  value={uid}
+                  onChange={(e) => setUid(e.target.value)}
+                  placeholder="Enter your User ID"
+                />
+              </FormControl>
+              <Button
+                type="submit"
+                colorScheme="blue"
+                width="100%"
+                isLoading={isLoading}
+              >
+                Login
+              </Button>
+              <Text>or</Text>
+              <Button
+                onClick={handleRegister}
+                colorScheme="green"
+                width="100%"
+                isLoading={isLoading}
+              >
+                Register New Account
+              </Button>
+            </VStack>
+          </form>
+        </Box>
       </VStack>
-    </Box>
+    </Container>
   )
-}
-
-export default Login 
+} 
