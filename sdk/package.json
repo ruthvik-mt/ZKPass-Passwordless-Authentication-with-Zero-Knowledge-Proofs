@@ -2,8 +2,15 @@
   "name": "zkpass-sdk",
   "version": "1.1.0",
   "description": "SDK for ZKPass authentication system - A secure authentication service for web applications",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "files": [
     "dist",
     "README.md"

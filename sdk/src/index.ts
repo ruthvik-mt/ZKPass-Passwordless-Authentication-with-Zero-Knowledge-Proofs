@@ -43,9 +43,9 @@ export class ZKPassError extends Error {
 export class ZKPassClient {
   private client: AxiosInstance;
   private static readonly ENV_URLS = {
-    development: 'http://localhost:3000',
-    staging: 'https://staging-api.zkpass.com',
-    production: 'https://api.zkpass.com'
+    development: 'http://localhost:3000/api',
+    staging: 'https://staging-api.zkpass.com/api',
+    production: 'https://api.zkpass.com/api'
   };
 
   constructor(config: ZKPassConfig) {

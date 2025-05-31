@@ -11,14 +11,16 @@ import {
   Text,
   useToast,
   Container,
+  Divider,
 } from '@chakra-ui/react'
 import { useAuth } from '../contexts/AuthContext'
 
 export const Login: React.FC = () => {
   const [uid, setUid] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const { login, register, error } = useAuth()
+  const { login, error } = useAuth()
   const toast = useToast()
+  const navigate = useNavigate()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,33 +33,10 @@ export const Login: React.FC = () => {
         duration: 3000,
         isClosable: true,
       })
+      navigate('/encoder')
     } catch (err) {
       toast({
         title: 'Login failed',
-        description: error || 'An error occurred',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      })
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleRegister = async () => {
-    setIsLoading(true)
-    try {
-      const recoveryPhrase = await register(uid)
-      toast({
-        title: 'Registration successful',
-        description: `Please save your recovery phrase: ${recoveryPhrase}`,
-        status: 'success',
-        duration: 10000,
-        isClosable: true,
-      })
-    } catch (err) {
-      toast({
-        title: 'Registration failed',
         description: error || 'An error occurred',
         status: 'error',
         duration: 5000,
@@ -92,15 +71,23 @@ export const Login: React.FC = () => {
               >
                 Login
               </Button>
-              <Text>or</Text>
+              <Divider />
               <Button
-                onClick={handleRegister}
+                onClick={() => navigate('/register')}
                 colorScheme="green"
                 width="100%"
-                isLoading={isLoading}
               >
                 Register New Account
               </Button>
+              <Text textAlign="center">
+                <Link 
+                  to="/recovery"
+                  color="blue.500" 
+                  _hover={{ textDecoration: 'underline' }}
+                >
+                  Forgot your UID?
+                </Link>
+              </Text>
             </VStack>
           </form>
         </Box>

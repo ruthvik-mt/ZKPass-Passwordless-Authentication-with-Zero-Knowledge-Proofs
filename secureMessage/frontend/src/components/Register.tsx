@@ -10,104 +10,81 @@ import {
   Heading,
   Text,
   useToast,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
+  Container,
 } from '@chakra-ui/react'
-import axios from 'axios'
+import { useAuth } from '../contexts/AuthContext'
 
-interface RegisterProps {
-  setIsAuthenticated: (value: boolean) => void
-}
-
-const Register = ({ setIsAuthenticated }: RegisterProps) => {
+export const Register: React.FC = () => {
   const [uid, setUid] = useState('')
-  const [recoveryPhrase, setRecoveryPhrase] = useState('')
-  const [showRecoveryPhrase, setShowRecoveryPhrase] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const toast = useToast()
+  const { register, error } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsLoading(true)
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/register', {
-        uid,
-      })
-      if (response.data.success) {
-        setRecoveryPhrase(response.data.recoveryPhrase)
-        setShowRecoveryPhrase(true)
-        toast({
-          title: 'Success',
-          description: response.data.message,
-          status: 'success',
-          duration: 5000,
-          isClosable: true,
-        })
-      }
-    } catch (error) {
+      const recoveryPhrase = await register(uid)
       toast({
-        title: 'Error',
-        description: 'Registration failed. UID might be taken.',
-        status: 'error',
-        duration: 3000,
+        title: 'Registration successful',
+        description: `Please save your recovery phrase: ${recoveryPhrase}`,
+        status: 'success',
+        duration: 10000,
         isClosable: true,
       })
+      navigate('/encoder')
+    } catch (err) {
+      toast({
+        title: 'Registration failed',
+        description: error || 'An error occurred',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      })
+    } finally {
+      setIsLoading(false)
     }
   }
 
-  const handleContinue = () => {
-    navigate('/login')
-  }
-
   return (
-    <Box maxW="md" mx="auto" mt={8} p={6} borderWidth={1} borderRadius="lg">
-      <VStack spacing={4}>
-        <Heading>Register</Heading>
-        {!showRecoveryPhrase ? (
-          <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+    <Container maxW="container.sm" py={10}>
+      <VStack spacing={8}>
+        <Heading>Register New Account</Heading>
+        <Box w="100%" p={8} borderWidth={1} borderRadius="lg">
+          <form onSubmit={handleSubmit}>
             <VStack spacing={4}>
               <FormControl isRequired>
-                <FormLabel>UID</FormLabel>
+                <FormLabel>User ID</FormLabel>
                 <Input
                   type="text"
                   value={uid}
                   onChange={(e) => setUid(e.target.value)}
-                  placeholder="Choose your UID"
+                  placeholder="Choose your User ID"
                 />
               </FormControl>
-              <Button type="submit" colorScheme="blue" width="100%">
+              <Button
+                type="submit"
+                colorScheme="blue"
+                width="100%"
+                isLoading={isLoading}
+              >
                 Register
               </Button>
+              <Text>
+                Already have an account?{' '}
+                <Link 
+                  to="/login" 
+                  color="blue.500"
+                  _hover={{ textDecoration: 'underline' }}
+                >
+                  Login
+                </Link>
+              </Text>
             </VStack>
           </form>
-        ) : (
-          <VStack spacing={4} width="100%">
-            <Alert status="success" borderRadius="md">
-              <AlertIcon />
-              <Box>
-                <AlertTitle>Registration Successful!</AlertTitle>
-                <AlertDescription>
-                  Your recovery phrase is: <strong>{recoveryPhrase}</strong>
-                  <br />
-                  Please save this phrase. You'll need it if you forget your UID.
-                </AlertDescription>
-              </Box>
-            </Alert>
-            <Button onClick={handleContinue} colorScheme="blue" width="100%">
-              Continue to Login
-            </Button>
-          </VStack>
-        )}
-        <Text>
-          Already have an account?{' '}
-          <Link to="/login" style={{ color: 'blue' }}>
-            Login
-          </Link>
-        </Text>
+        </Box>
       </VStack>
-    </Box>
+    </Container>
   )
-}
-
-export default Register 
+} 

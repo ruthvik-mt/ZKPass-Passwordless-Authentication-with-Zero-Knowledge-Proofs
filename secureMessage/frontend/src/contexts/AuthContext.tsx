@@ -1,110 +1,108 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { createZKPassClient, ZKPassClient, ZKPassError } from 'zkpass-sdk';
+import { useNavigate } from 'react-router-dom';
+import { ZKPassClient } from 'zkpass-sdk';
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  uid: string | null;
-  login: (uid: string) => Promise<void>;
-  register: (uid: string) => Promise<string>;
+  login: (username: string, password: string) => Promise<void>;
+  register: (username: string, password: string) => Promise<void>;
   verifyRecovery: (recoveryPhrase: string) => Promise<void>;
   logout: () => void;
   error: string | null;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [uid, setUid] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [client, setClient] = useState<ZKPassClient | null>(null);
+  const navigate = useNavigate();
+  const sdk = new ZKPassClient({
+    baseURL: 'http://localhost:3000',
+  });
 
   useEffect(() => {
-    // Initialize ZKPass client
-    const zkpass = createZKPassClient({
-      environment: 'development', // Change to 'production' for production
-      apiKey: import.meta.env.VITE_ZKPASS_API_KEY // Add this to your .env file
-    });
-    setClient(zkpass);
-
-    // Check for stored UID
-    const storedUid = localStorage.getItem('uid');
-    if (storedUid) {
-      setUid(storedUid);
+    const token = localStorage.getItem('token');
+    if (token) {
       setIsAuthenticated(true);
     }
   }, []);
 
-  const login = async (uid: string) => {
-    if (!client) throw new Error('Client not initialized');
+  const handleNavigation = (path: string) => {
     try {
-      setError(null);
-      const response = await client.login(uid);
-      setUid(response.uid);
-      setIsAuthenticated(true);
-      localStorage.setItem('uid', response.uid);
+      navigate(path);
     } catch (err) {
-      const error = err as ZKPassError;
-      setError(error.message);
-      throw error;
+      console.error('Navigation failed:', err);
+      // Fallback to window.location if navigate fails
+      window.location.href = path;
     }
   };
 
-  const register = async (uid: string) => {
-    if (!client) throw new Error('Client not initialized');
+  const login = async (username: string, password: string) => {
     try {
       setError(null);
-      const response = await client.register(uid);
-      return response.recoveryPhrase;
+      const response = await sdk.login(username, password);
+      localStorage.setItem('token', response.token);
+      setIsAuthenticated(true);
+      handleNavigation('/encoder');
     } catch (err) {
-      const error = err as ZKPassError;
-      setError(error.message);
-      throw error;
+      setError(err instanceof Error ? err.message : 'Login failed');
+      throw err;
+    }
+  };
+
+  const register = async (username: string, password: string) => {
+    try {
+      setError(null);
+      const response = await sdk.register(username, password);
+      localStorage.setItem('token', response.token);
+      setIsAuthenticated(true);
+      handleNavigation('/encoder');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Registration failed');
+      throw err;
     }
   };
 
   const verifyRecovery = async (recoveryPhrase: string) => {
-    if (!client) throw new Error('Client not initialized');
     try {
       setError(null);
-      const response = await client.verifyRecovery(recoveryPhrase);
-      setUid(response.uid);
+      const response = await sdk.verifyRecovery(recoveryPhrase);
+      localStorage.setItem('token', response.token);
       setIsAuthenticated(true);
-      localStorage.setItem('uid', response.uid);
+      handleNavigation('/encoder');
     } catch (err) {
-      const error = err as ZKPassError;
-      setError(error.message);
-      throw error;
+      setError(err instanceof Error ? err.message : 'Recovery verification failed');
+      throw err;
     }
   };
 
   const logout = () => {
-    setUid(null);
+    localStorage.removeItem('token');
     setIsAuthenticated(false);
-    localStorage.removeItem('uid');
+    handleNavigation('/login');
   };
 
   return (
     <AuthContext.Provider
       value={{
         isAuthenticated,
-        uid,
         login,
         register,
         verifyRecovery,
         logout,
-        error
+        error,
       }}
     >
       {children}
     </AuthContext.Provider>
   );
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 }; 
