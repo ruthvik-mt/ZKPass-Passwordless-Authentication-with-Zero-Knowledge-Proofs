@@ -4,8 +4,8 @@ import { ZKPassClient } from 'zkpass-sdk';
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: (username: string, password: string) => Promise<void>;
-  register: (username: string, password: string) => Promise<void>;
+  login: (uid: string) => Promise<void>;
+  register: (uid: string) => Promise<string>;
   verifyRecovery: (recoveryPhrase: string) => Promise<void>;
   logout: () => void;
   error: string | null;
@@ -18,7 +18,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const sdk = new ZKPassClient({
-    baseURL: 'http://localhost:3000',
+    environment: 'development',
+    baseURL: 'http://localhost:3000/api'
   });
 
   useEffect(() => {
@@ -38,11 +39,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const login = async (username: string, password: string) => {
+  const login = async (uid: string) => {
     try {
       setError(null);
-      const response = await sdk.login(username, password);
-      localStorage.setItem('token', response.token);
+      const response = await sdk.login(uid);
+      localStorage.setItem('token', response.uid);
       setIsAuthenticated(true);
       handleNavigation('/encoder');
     } catch (err) {
@@ -51,13 +52,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const register = async (username: string, password: string) => {
+  const register = async (uid: string) => {
     try {
       setError(null);
-      const response = await sdk.register(username, password);
-      localStorage.setItem('token', response.token);
+      const response = await sdk.register(uid);
+      localStorage.setItem('token', response.uid);
       setIsAuthenticated(true);
-      handleNavigation('/encoder');
+      return response.recoveryPhrase;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Registration failed');
       throw err;
@@ -68,7 +69,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setError(null);
       const response = await sdk.verifyRecovery(recoveryPhrase);
-      localStorage.setItem('token', response.token);
+      localStorage.setItem('token', response.uid);
       setIsAuthenticated(true);
       handleNavigation('/encoder');
     } catch (err) {

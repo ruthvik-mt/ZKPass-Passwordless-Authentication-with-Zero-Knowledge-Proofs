@@ -103,34 +103,64 @@ export const verifyRecoveryPhrase: RequestHandler = async (req, res) => {
   try {
     const { recoveryPhrase } = req.body;
 
-    if (!recoveryPhrase) {
-      res.status(400).json({ success: false, message: 'Recovery phrase is required' });
+    // Input validation
+    if (!recoveryPhrase || typeof recoveryPhrase !== 'string') {
+      res.status(400).json({ 
+        success: false, 
+        message: 'Recovery phrase must be a non-empty string' 
+      });
       return;
     }
 
-    // Derive UID from recovery phrase
-    const { uid, privateKey } = deriveUIDFromRecoveryPhrase(recoveryPhrase);
-
-    // Check if UID exists on blockchain
-    const uidExists = await checkUIDExists(uid);
-    if (!uidExists) {
-      res.status(404).json({ success: false, message: 'Invalid recovery phrase' });
+    // Validate recovery phrase format (should be space-separated words)
+    if (!/^[\w\s]+$/.test(recoveryPhrase)) {
+      res.status(400).json({ 
+        success: false, 
+        message: 'Invalid recovery phrase format' 
+      });
       return;
     }
 
-    // Get the public key from the private key
-    const wallet = new ethers.Wallet(privateKey);
-    const publicKey = wallet.address;
+    try {
+      // Derive UID from recovery phrase
+      const { uid, privateKey } = deriveUIDFromRecoveryPhrase(recoveryPhrase);
 
-    res.status(200).json({
-      success: true,
-      message: 'Recovery successful',
-      uid,
-      publicKey
-    });
+
+      // Check if UID exists on blockchain
+      const uidExists = await checkUIDExists(uid);
+      if (!uidExists) {
+        res.status(404).json({ 
+          success: false, 
+          message: 'Invalid recovery phrase - UID not found' 
+        });
+        return;
+      }
+
+      // Get the public key from the private key
+      const wallet = new ethers.Wallet(privateKey);
+      const publicKey = wallet.address;
+
+      // Return success response matching SDK interface
+      res.status(200).json({
+        success: true,
+        message: 'Recovery successful',
+        uid,
+        publicKey
+      });
+    } catch (derivationError) {
+      res.status(400).json({ 
+        success: false, 
+        message: 'Invalid recovery phrase - could not derive UID' 
+      });
+      return;
+    }
   } catch (error) {
     console.error('Recovery error:', error);
-    res.status(500).json({ success: false, message: 'Server error during recovery' });
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error during recovery',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
   }
 };
 
@@ -155,8 +185,6 @@ function derivePrivateKey(uid: string): string {
   
   return privateKey;
 }
-
-
 
 /**
  * Generate a recovery phrase from UID and private key

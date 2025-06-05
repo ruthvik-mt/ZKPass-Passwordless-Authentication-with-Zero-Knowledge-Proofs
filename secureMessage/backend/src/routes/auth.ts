@@ -1,12 +1,16 @@
 import express from 'express'
-import { v4 as uuidv4 } from 'uuid'
+import { ZKPassClient } from 'zkpass-sdk'
 
 const router = express.Router()
+const sdk = new ZKPassClient({
+  environment: 'development',
+  baseURL: 'http://localhost:3001/api'
+})
 
 // In-memory storage for users
 const users: { [key: string]: { uid: string; recoveryPhrase: string; publicKey: string } } = {}
 
-router.post('/auth/register', (req, res) => {
+router.post('/register', async (req, res) => {
   const { uid } = req.body
 
   if (!uid) {
@@ -23,20 +27,19 @@ router.post('/auth/register', (req, res) => {
     })
   }
 
-  // Generate a recovery phrase (using UUID for simplicity)
-  const recoveryPhrase = uuidv4().split('-')[0]
-  // Generate a mock public key (in real implementation, this would be derived from the recovery phrase)
-  const publicKey = `0x${uuidv4().replace(/-/g, '')}`
-
-  users[uid] = { uid, recoveryPhrase, publicKey }
-  res.json({ 
-    success: true, 
-    message: 'Registration successful',
-    recoveryPhrase
-  })
+  try {
+    const response = await sdk.register(uid)
+    res.json(response)
+  } catch (error) {
+    console.error('Registration error:', error)
+    res.status(500).json({ 
+      success: false, 
+      message: error instanceof Error ? error.message : 'Registration failed' 
+    })
+  }
 })
 
-router.post('/auth/login', (req, res) => {
+router.post('/login', async (req, res) => {
   const { uid } = req.body
 
   if (!uid) {
@@ -53,14 +56,19 @@ router.post('/auth/login', (req, res) => {
     })
   }
 
-  res.json({ 
-    success: true, 
-    message: 'Login successful',
-    uid: users[uid].uid
-  })
+  try {
+    const response = await sdk.login(uid)
+    res.json(response)
+  } catch (error) {
+    console.error('Login error:', error)
+    res.status(500).json({ 
+      success: false, 
+      message: error instanceof Error ? error.message : 'Login failed' 
+    })
+  }
 })
 
-router.post('/auth/verify-recovery', (req, res) => {
+router.post('/verify-recovery', async (req, res) => {
   const { recoveryPhrase } = req.body
 
   if (!recoveryPhrase) {
@@ -79,12 +87,16 @@ router.post('/auth/verify-recovery', (req, res) => {
     })
   }
 
-  res.json({ 
-    success: true, 
-    message: 'Recovery successful',
-    uid: user.uid,
-    publicKey: user.publicKey
-  })
+  try {
+    const response = await sdk.verifyRecovery(recoveryPhrase)
+    res.json(response)
+  } catch (error) {
+    console.error('Recovery verification error:', error)
+    res.status(500).json({ 
+      success: false, 
+      message: error instanceof Error ? error.message : 'Recovery verification failed' 
+    })
+  }
 })
 
 export { router as authRouter } 
