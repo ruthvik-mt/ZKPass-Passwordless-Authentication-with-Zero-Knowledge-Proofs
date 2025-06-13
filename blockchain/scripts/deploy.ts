@@ -8,7 +8,7 @@ async function main() {
   const zkPass = await ZKPass.deploy();
   await zkPass.waitForDeployment();
   const contractAddress = await zkPass.getAddress();
-  console.log(`ZKPass deployed to: ${contractAddress}`);
+  console.log(`ZKPass deployed`);
 
   // Log the contract address for .env file
   console.log("\nAdd this address to your .env file:");
