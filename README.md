@@ -6,8 +6,8 @@ ZKPass is a secure authentication system that uses Zero-Knowledge Proofs (ZKPs) 
 
 ### Simple Example: Email & Password or userIdentity [we call it UID] (But with ZKP)
 Imagine:
-- Your **UID** = `Krishna678_INSTA@` (stored on blockchain)
-- Your **priKey** = `hidden_password` (derived from UID, never stored)
+- Your **UID** = `Krishna678_INSTA@` (stored on blockchain).
+- Your **priKey** = `hidden_password` (derived from UID, never stored).
 
 #### Login Flow:
 1. **You Claim**:  
@@ -125,15 +125,15 @@ npx hardhat run scripts/deploy.js --network localhost
 
 ### Login
 
-1. User enters their UID
-2. System derives a private key from the UID
-3. A Zero-Knowledge Proof is generated to verify the user knows the private key
-4. The proof is verified without revealing the private key
-5. If valid, the user is authenticated
+1. User enters their UID.
+2. System derives a private key from the UID.
+3. A Zero-Knowledge Proof is generated to verify the user knows the private key.
+4. The proof is verified without revealing the private key.
+5. If valid, the user is authenticated.
 
 ### Recovery
 
-1. User enters their recovery phrase
+1. User enters their recovery phrase.
 2. System derives the UID from the recovery phrase
 
 ## Security Considerations
