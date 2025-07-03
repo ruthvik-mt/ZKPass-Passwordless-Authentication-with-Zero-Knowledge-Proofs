@@ -111,7 +111,7 @@ In another terminal, deploy the contract:
 
 ```bash
 cd blockchain
-npx hardhat run scripts/deploy.js --network localhost
+npx hardhat run scripts/deploy.ts --network localhost
 ```
 
 ## Authentication Flow
