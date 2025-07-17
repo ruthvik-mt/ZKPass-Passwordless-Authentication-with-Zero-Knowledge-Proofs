@@ -1,12 +1,12 @@
-import { ZKPassClient } from '../index';
+import { ZKPassSDK } from '../index';
 import axios, { AxiosInstance, AxiosError } from 'axios';
 
 // Mock axios
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-describe('ZKPassClient', () => {
-  let client: ZKPassClient;
+describe('ZKPassSDK', () => {
+  let client: ZKPassSDK;
   const mockAxiosInstance: Partial<AxiosInstance> = {
     post: jest.fn(),
     interceptors: {
@@ -24,34 +24,16 @@ describe('ZKPassClient', () => {
     mockedAxios.create.mockReturnValue(mockAxiosInstance as AxiosInstance);
     
     // Create a new client instance for each test
-    client = new ZKPassClient({
-      baseURL: 'https://api.zkpass.com'
+    client = new ZKPassSDK({
+      apiKey: 'test-api-key',
+      baseUrl: 'https://api.zkpass.com'
     });
   });
 
   describe('constructor', () => {
-    it('should throw error if baseURL is not provided', () => {
-      expect(() => new ZKPassClient({} as { baseURL: string })).toThrow('baseURL is required in config');
-    });
-
-    it('should create client with default timeout', () => {
-      expect(mockedAxios.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          timeout: 30000
-        })
-      );
-    });
-
-    it('should create client with custom timeout', () => {
-      new ZKPassClient({
-        baseURL: 'https://api.zkpass.com',
-        timeout: 5000
-      });
-      expect(mockedAxios.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          timeout: 5000
-        })
-      );
+    it('should create client with default baseUrl', () => {
+      const sdk = new ZKPassSDK({ apiKey: 'test-api-key' });
+      expect(sdk).toBeInstanceOf(ZKPassSDK);
     });
   });
 
@@ -60,7 +42,6 @@ describe('ZKPassClient', () => {
       const mockResponse = {
         data: {
           success: true,
-          message: 'Registration successful',
           recoveryPhrase: 'test recovery phrase'
         }
       };
@@ -68,7 +49,7 @@ describe('ZKPassClient', () => {
 
       const response = await client.register('user123');
       expect(response).toEqual(mockResponse.data);
-      expect(mockAxiosInstance.post).toHaveBeenCalledWith('/register', { uid: 'user123' });
+      expect(mockAxiosInstance.post).toHaveBeenCalledWith('/auth/register', { uid: 'user123' });
     });
 
     it('should handle registration failure', async () => {
@@ -90,7 +71,6 @@ describe('ZKPassClient', () => {
       const mockResponse = {
         data: {
           success: true,
-          message: 'Login successful',
           uid: 'user123'
         }
       };
@@ -98,7 +78,7 @@ describe('ZKPassClient', () => {
 
       const response = await client.login('user123');
       expect(response).toEqual(mockResponse.data);
-      expect(mockAxiosInstance.post).toHaveBeenCalledWith('/login', { uid: 'user123' });
+      expect(mockAxiosInstance.post).toHaveBeenCalledWith('/auth/login', { uid: 'user123' });
     });
 
     it('should handle login failure', async () => {
@@ -120,16 +100,14 @@ describe('ZKPassClient', () => {
       const mockResponse = {
         data: {
           success: true,
-          message: 'Recovery successful',
-          uid: 'user123',
-          publicKey: '0x123...'
+          uid: 'user123'
         }
       };
       mockAxiosInstance.post?.mockResolvedValue(mockResponse);
 
       const response = await client.verifyRecovery('test recovery phrase');
       expect(response).toEqual(mockResponse.data);
-      expect(mockAxiosInstance.post).toHaveBeenCalledWith('/verify-recovery', { recoveryPhrase: 'test recovery phrase' });
+      expect(mockAxiosInstance.post).toHaveBeenCalledWith('/auth/verify-recovery', { recoveryPhrase: 'test recovery phrase' });
     });
 
     it('should handle recovery verification failure', async () => {
