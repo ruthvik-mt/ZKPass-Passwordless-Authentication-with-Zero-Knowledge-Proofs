@@ -10,6 +10,16 @@ npm install zkpass-sdk
 yarn add zkpass-sdk
 ```
 
+## Testing the SDK
+
+To run the test suite and verify the SDK functionality, use the following command in the SDK directory:
+
+```bash
+npm test
+```
+
+This will run all Jest tests located in the `src/__tests__/` directory. You should see output indicating that all tests have passed if the SDK is working correctly.
+
 ## Integration Guide
 
 ### Backend Integration
