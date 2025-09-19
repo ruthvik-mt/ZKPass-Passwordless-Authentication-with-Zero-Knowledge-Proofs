@@ -138,6 +138,6 @@ npx hardhat run scripts/deploy.ts --network localhost
 
 ## Security Considerations
 
-- Private keys are never stored or transmitted
+- Private keys are never stored or transmitted anywhere
 - Zero-Knowledge Proofs ensure secure authentication
 - Recovery phrases should be stored securely by users
